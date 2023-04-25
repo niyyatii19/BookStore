@@ -71,7 +71,7 @@
 
 	<div class="container addPadding">
 
-		<form class="row g-3" method="POST"  enctype=”multipart/form-data”  >
+		<form  enctype="multipart/form-data" class="row g-3" method="POST" >
 			<div class="col-md-6">
 				<label class="form-label">Book title</label> <input type="text"
 					class="form-control" id="title" name="title"  value = "${book.title }"required>
@@ -92,7 +92,7 @@
 			
 			<div class="col-md-6">
 				<label class="form-label">Add photo</label> 
-				<input class="form-control" type="text" name="image" accept="image/png, image/jpg" value= "${book.url }"/>
+				<input class="form-control" type="file" name="image" accept="image/png, image/jpg""/>
 			</div>
 			
 			<div class="col-md-6">

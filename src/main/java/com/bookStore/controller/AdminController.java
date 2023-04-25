@@ -1,19 +1,30 @@
 package com.bookStore.controller;
 
+import java.io.BufferedWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.bookStore.dto.BookAuthor;
 import com.bookStore.entity.Books;
 import com.bookStore.service.BookService;
+import com.bookStore.utility.FileUploadUtil;
 
 @Controller
 @RequestMapping("/admin")
@@ -33,18 +44,23 @@ public class AdminController {
 		return "insertForm";
 	}
 
-	@PostMapping("/add")
-	public String insertBook(@RequestParam("image") String text, BookAuthor book) {
+	@RequestMapping(path = "/add", method = RequestMethod.POST)
+	public String insertBook(@RequestParam("image") MultipartFile text, BookAuthor book) {
+		System.out.println("ccc");
 		byte[] bytes;
 		
 		try {
-//			bytes = image.getBytes();
-//			Path path = Paths.get("./resources/static/images/" + image.getOriginalFilename());
-//			Files.write(path, bytes);
-//			book.setUrl("/images/"+ image.getOriginalFilename());
-			System.out.println(text);
-			book.setUrl(text);
+			System.out.println(text.getOriginalFilename());
+			bytes = text.getBytes();
+			book.setUrl("/images/"+ text.getOriginalFilename());
 			String result = bookServ.insert(book);
+			
+			String uploadDir = "src/main/resources/static/images/";
+			 
+	        FileUploadUtil.saveFile(uploadDir, text.getOriginalFilename(), text);
+//			book.setUrl(text);
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "redirect:add";
