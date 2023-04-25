@@ -1,16 +1,9 @@
 package com.bookStore.controller;
 
-import java.io.BufferedWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.bookStore.dto.BookAuthor;
 import com.bookStore.entity.Books;
@@ -48,19 +40,18 @@ public class AdminController {
 	public String insertBook(@RequestParam("image") MultipartFile text, BookAuthor book) {
 		System.out.println("ccc");
 		byte[] bytes;
-		
+
 		try {
 			System.out.println(text.getOriginalFilename());
 			bytes = text.getBytes();
-			book.setUrl("/images/"+ text.getOriginalFilename());
-			String result = bookServ.insert(book);
-			
+			book.setUrl("/images/" + text.getOriginalFilename());
+			bookServ.insert(book);
+
 			String uploadDir = "src/main/resources/static/images/";
-			 
-	        FileUploadUtil.saveFile(uploadDir, text.getOriginalFilename(), text);
+
+			FileUploadUtil.saveFile(uploadDir, text.getOriginalFilename(), text);
 //			book.setUrl(text);
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "redirect:add";
@@ -81,10 +72,10 @@ public class AdminController {
 
 		return "updateForm";
 	}
-	
+
 	@PostMapping("/edit/{id}")
 	public String updateBook(Books book, @PathVariable int id) {
-		
+
 		bookServ.updateBook(book);
 		return "redirect:/admin";
 	}
@@ -102,6 +93,5 @@ public class AdminController {
 		map.put("books", list);
 		return "listBooks";
 	}
-	
-	
+
 }
